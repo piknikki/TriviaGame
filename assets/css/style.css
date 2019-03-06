@@ -1,0 +1,22 @@
+/*font-family: 'ZCOOL QingKe HuangYou', cursive;*/
+/*font-family: 'Poppins', sans-serif;*/
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5em;
+    line-height: 1.5;
+    letter-spacing: 2px;
+}
+
+#title {
+    font-family: 'ZCOOL QingKe HuangYou', cursive;
+    font-size: 1.5em;
+    line-height: 1.5;
+    letter-spacing: 2px;
+}
+
+#question {
+    line-height: 2;
+
+}
+
