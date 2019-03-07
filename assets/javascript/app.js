@@ -1,10 +1,12 @@
 
 var score = 0;
-var questionIndex = 0;
 var started = false;
-var answerIndex = 0;
+var questionIndex = 0;
 var results = "";
-var answers;
+var currentQuestion = "";
+var currentAnswers = "";
+var seconds = 10;
+
 
 var questionsAnswers = [
     {q: "How often does your cat press on your internal organs?", a: ["daily", "weekly", "monthly", "never"]},
@@ -20,20 +22,105 @@ var questionsAnswers = [
     {q: "Please give your cat a once-over to estimate their Spooky MurderRageSauce. Be fair. ", a: ["10+ (my cat is extra spooky)", "7 - 9", "4 - 6", "0 - 3"]}
 ];
 
-for (let i = 0; i < questionsAnswers.length; i++) {
-    questionIndex = i;
-    answers = questionsAnswers[i].a;
-    console.log(answers);
-    for (let j = 0; j < questionsAnswers[i].a.length; j++) {
-        answerIndex = j;
+
+
+$(document).keypress(function() {
+
+    if (!started) {
+        // collapse the title, generate a question, change started to true
+        $("#title").slideUp();
+        renderQuestion();
+        renderAnswers();
+        questionIndex++;
+        started = true;
+        countDown();
     }
 
+})
 
+
+function countDown() {
+    seconds = 10;
+    var countdown = setInterval(function() {
+        seconds--;
+        $("#time-left").html("<h2>You have " + seconds + " seconds to respond</h2>");
+        if (seconds <= 0) {
+            clearInterval(countdown);
+            score += 30;
+            $("#time-left").empty();
+            finalScore();
+        }
+    }, 1000);
 }
 
 
-// var answersIndex = questionsAnswers[questionIndex].a[answersIndex];
-// console.log(questionsAnswers[10].a);
+function renderQuestion() {
+    // give a question
+    // if no more left, render next one
+    console.log(questionIndex);
+    if (questionIndex <= (questionsAnswers.length - 1)) {
+        var currentQuestion = questionsAnswers[questionIndex].q;
+    } else {
+        finalScore();
+    }
+    questionIndex++;
+    seconds = 11;
+    $("#question").text(currentQuestion);
+}
+
+
+function renderAnswers() {
+    if (questionIndex <= (questionsAnswers.length - 1)) {
+        var currentAnswers = questionsAnswers[questionIndex].a;
+    } else {
+        finalScore();
+    }
+
+    for (let i = 0; i < currentAnswers.length; i++) {
+        var answersIndex = currentAnswers.indexOf(currentAnswers[i]);
+        var radioBtn = $('<input id="option" class="my-button" type="radio" name="option">');
+        var btnOption = $('<label id="answer" for="option"></label>');
+
+
+
+        radioBtn.addClass("radioBtn");
+        btnOption.text("  " + currentAnswers[answersIndex]);
+
+        if (i === 0) {
+            radioBtn.attr("data-radiobtnvalue", 10);
+        } else if (i === 1) {
+            radioBtn.attr("data-radiobtnvalue", 7);
+        } else if (i === 2) {
+            radioBtn.attr("data-radiobtnvalue", 4);
+        } else if (i === 3) {
+            radioBtn.attr("data-radiobtnvalue", 2);
+        }
+
+        $("#answers").append(radioBtn).append(btnOption);
+
+    }
+
+    $("#answers").on("click", "input", function(event) {
+        event.preventDefault();
+        score = score + parseInt($(this).attr("data-radiobtnvalue"));
+        $("#your-score").text(score);
+        renderQuestion();
+    });
+}
+
+
+function finalScore() {
+    $(".question-block").empty();
+    $(".answer-block").empty();
+    var percentMessage = "There is a " + score + "% chance your cat is plotting to kill you.";
+    if (score >= 60) {
+        $("#results").html(percentMessage + "<br>" +  "<br>" + "It's been nice knowing you. You will be missed.");
+    } else if ((score < 60) && (score >= 30)) {
+        $("#results").html(percentMessage + "<br>" + "<br>" +  "May your death be merciful and just.");
+    } else if (score < 30) {
+        $("#results").html(percentMessage + "<br>" +  "<br>" + "You lucky bastard! Watch your step; this result could change at any moment.");
+    }
+}
 
 
 
@@ -45,87 +132,6 @@ for (let i = 0; i < questionsAnswers.length; i++) {
 
 
 
-//
-//
-// $(document).keypress(function() {
-//
-//     if (!started) {
-//         console.log("this is working");
-//         // collapse the title, generate a question, change started to true
-//         $("#title").collapse("hide");
-//         // $("#question-section").collapse("show");
-//         // $("#question").text(newQuestion);
-//         renderQuestion();
-//         started = true;
-//     }
-//
-// })
-//
-// // need a button click event to count up questionIndex and kep track of answers/score
-//
-//
-// function refreshGame() {
-//     score = 0;
-//
-// }
-//
-//
-// function renderQuestion() {
-//     // give a question
-//     // if no more left, render next one
-//    if (questionIndex <= (questionsAnswers.length - 1)) {
-//         var newQuestion = questionsAnswers[questionIndex].q;
-//         var newAnswers = questionsAnswers[questionIndex].a;
-//
-//
-//         for (var i = 0; i < questionsAnswers.length + 1; i++) {
-//             $("#question").text(newQuestion);
-//             questionIndex++;
-//             var radioBtn = $('<input class="my-button form-check-input" type="radio" name="option">' +
-//                 '<label id="answer" for=""></label>')
-//
-//             if (i === 0) {
-//                 $(".my-button").attr("data-murdersaucevalue", 10);
-//             } else if (i === 1) {
-//                 $(".my-button").attr("data-murdersaucevalue", 7);
-//             } else if (i === 2) {
-//                 $(".my-button").attr("data-murdersaucevalue", 4);
-//             } else if (i === 3) {
-//                 $(".my-button").attr("data-murdersaucevalue", 2);
-//             }
-//
-//             radioBtn.text(newAnswers[i]);
-//             $("#answer").append(radioBtn);
-//         }
-//
-//     } else if (questionIndex ) {
-//         $("#question").text("All done.");
-//         $("#score").text(score);
-//         $("#results").text(results);
-//     }
-//
-//     return newQuestion;
-// }
-//
-//
-// function updateScore() {
-//     $("#your-score").text(score);
-// }
-//
-// function giveResults() {
-//     var response = "There is a " + score + "% chance your cat is plotting to kill you.";
-//     if (score >= 60) {
-//         results = "Been nice knowing you. You will be missed.";
-//         $("body").style.background("red");
-//     } else if (score < 60 && score >= 30) {
-//         results = "May your death be merciful and just."
-//     } else if (score < 30) {
-//         results = "You lucky bastard! Watch your step; this result could change at any moment.";
-//     }
-//     return response + results;
-// }
-//
-// renderQuestion();
-// updateScore();
-//
-// //  make event handler for when user clicks a button
+
+
+

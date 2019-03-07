@@ -5,7 +5,8 @@ var questionIndex = 0;
 var results = "";
 var currentQuestion = "";
 var currentAnswers = "";
-var clockRunning = false;
+var seconds = 10;
+
 
 var questionsAnswers = [
     {q: "How often does your cat press on your internal organs?", a: ["daily", "weekly", "monthly", "never"]},
@@ -26,44 +27,44 @@ var questionsAnswers = [
 $(document).keypress(function() {
 
     if (!started) {
-        console.log("this is working");
-        console.log(questionIndex);
         // collapse the title, generate a question, change started to true
         $("#title").slideUp();
         renderQuestion();
         renderAnswers();
         questionIndex++;
         started = true;
-        // setTimeout(tenSeconds, 10 * 1000);
-        startTimer();
+        countDown();
     }
 
 })
 
-function startTimer() {
-    if (!clockRunning) {
-        setTimeout($("#time-left").html("<h2>You have 10 seconds to respond</h2>"), 10 * 1000);
-        clockRunning = true;
-    }
 
+function countDown() {
+    seconds = 10;
+    var countdown = setInterval(function() {
+        seconds--;
+        $("#time-left").html("<h2>You have " + seconds + " seconds to respond</h2>");
+        if (seconds <= 0) {
+            clearInterval(countdown);
+            score += 30;
+            $("#time-left").empty();
+            finalScore();
+        }
+    }, 1000);
 }
 
-function stopTimer() {
-    $("#time-left").html("<h2>Next!</h2>");
-    clockRunning = false;
-}
-
-// function tenSeconds() {
-//     $("#time-left").html("<h2>You have 10 seconds to answer.</h2>")
-// }
 
 function renderQuestion() {
     // give a question
     // if no more left, render next one
+    console.log(questionIndex);
     if (questionIndex <= (questionsAnswers.length - 1)) {
         var currentQuestion = questionsAnswers[questionIndex].q;
+    } else {
+        finalScore();
     }
     questionIndex++;
+    seconds = 11;
     $("#question").text(currentQuestion);
 }
 
@@ -71,9 +72,9 @@ function renderQuestion() {
 function renderAnswers() {
     if (questionIndex <= (questionsAnswers.length - 1)) {
         var currentAnswers = questionsAnswers[questionIndex].a;
+    } else {
+        finalScore();
     }
-
-    console.log(currentAnswers);
 
     for (let i = 0; i < currentAnswers.length; i++) {
         var answersIndex = currentAnswers.indexOf(currentAnswers[i]);
@@ -103,35 +104,23 @@ function renderAnswers() {
         event.preventDefault();
         score = score + parseInt($(this).attr("data-radiobtnvalue"));
         $("#your-score").text(score);
-        stopTimer();
         renderQuestion();
     });
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function finalScore() {
+    $(".question-block").empty();
+    $(".answer-block").empty();
+    var percentMessage = "There is a " + score + "% chance your cat is plotting to kill you.";
+    if (score >= 60) {
+        $("#results").html(percentMessage + "<br>" +  "<br>" + "It's been nice knowing you. You will be missed.");
+    } else if ((score < 60) && (score >= 30)) {
+        $("#results").html(percentMessage + "<br>" + "<br>" +  "May your death be merciful and just.");
+    } else if (score < 30) {
+        $("#results").html(percentMessage + "<br>" +  "<br>" + "You lucky bastard! Watch your step; this result could change at any moment.");
+    }
+}
 
 
 
