@@ -5,6 +5,7 @@ var questionIndex = 0;
 var results = "";
 var currentQuestion = "";
 var currentAnswers = "";
+var answersIndex;
 var seconds = 10;
 
 
@@ -31,7 +32,6 @@ $(document).keypress(function() {
         $("#title").slideUp();
         renderQuestion();
         renderAnswers();
-        questionIndex++;
         started = true;
         countDown();
     }
@@ -57,48 +57,47 @@ function countDown() {
 function renderQuestion() {
     // give a question
     // if no more left, render next one
-    console.log(questionIndex);
     if (questionIndex <= (questionsAnswers.length - 1)) {
         var currentQuestion = questionsAnswers[questionIndex].q;
     } else {
         finalScore();
     }
-    questionIndex++;
     seconds = 11;
     $("#question").text(currentQuestion);
+    questionIndex++;
 }
 
 
 function renderAnswers() {
     if (questionIndex <= (questionsAnswers.length - 1)) {
-        var currentAnswers = questionsAnswers[questionIndex].a;
+        currentAnswers = questionsAnswers[questionIndex].a;
     } else {
         finalScore();
     }
 
-    for (let i = 0; i < currentAnswers.length; i++) {
-        var answersIndex = currentAnswers.indexOf(currentAnswers[i]);
-        var radioBtn = $('<input id="option" class="my-button" type="radio" name="option">');
-        var btnOption = $('<label id="answer" for="option"></label>');
+        for (let i = 0; i < currentAnswers.length; i++) {
+            answersIndex = currentAnswers.indexOf(currentAnswers[i]);
+            var radioBtn = $('<input id="option" class="my-button" type="radio" name="option">');
+            var btnOption = $('<label id="answer" for="option"></label>');
 
 
+            radioBtn.addClass("radioBtn");
+            btnOption.text("  " + currentAnswers[answersIndex]);
 
-        radioBtn.addClass("radioBtn");
-        btnOption.text("  " + currentAnswers[answersIndex]);
+            if (i === 0) {
+                radioBtn.attr("data-radiobtnvalue", 10);
+            } else if (i === 1) {
+                radioBtn.attr("data-radiobtnvalue", 7);
+            } else if (i === 2) {
+                radioBtn.attr("data-radiobtnvalue", 4);
+            } else if (i === 3) {
+                radioBtn.attr("data-radiobtnvalue", 2);
+            }
 
-        if (i === 0) {
-            radioBtn.attr("data-radiobtnvalue", 10);
-        } else if (i === 1) {
-            radioBtn.attr("data-radiobtnvalue", 7);
-        } else if (i === 2) {
-            radioBtn.attr("data-radiobtnvalue", 4);
-        } else if (i === 3) {
-            radioBtn.attr("data-radiobtnvalue", 2);
+            $("#answers").append(radioBtn).append(btnOption);
+
         }
 
-        $("#answers").append(radioBtn).append(btnOption);
-
-    }
 
     $("#answers").on("click", "input", function(event) {
         event.preventDefault();
@@ -110,6 +109,7 @@ function renderAnswers() {
 
 
 function finalScore() {
+    $("#time-left").empty();
     $(".question-block").empty();
     $(".answer-block").empty();
     var percentMessage = "There is a " + score + "% chance your cat is plotting to kill you.";
