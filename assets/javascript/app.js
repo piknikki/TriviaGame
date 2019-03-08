@@ -118,7 +118,7 @@ function finalScore() {
     } else if ((score < 60) && (score >= 30)) {
         $("#results").html(percentMessage + "<br>" + "<br>" +  "May your death be merciful and just.");
     } else if (score < 30) {
-        $("#results").html(percentMessage + "<br>" +  "<br>" + "You lucky bastard! Watch your step; this result could change at any moment.");
+        $("#results").html(percentMessage + "<br>" +  "<br>" + "You lucky duck! Watch your step; this result could change at any moment.");
     }
 }
 
