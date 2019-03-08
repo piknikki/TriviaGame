@@ -109,17 +109,19 @@ function renderAnswers() {
 
 
 function finalScore() {
-    $("#time-left").empty();
+    $("#time-left").remove();
     $(".question-block").empty();
     $(".answer-block").empty();
     var percentMessage = "There is a " + score + "% chance your cat is plotting to kill you.";
     if (score >= 60) {
+        $("body").css("background-color", "red");
         $("#results").html(percentMessage + "<br>" +  "<br>" + "It's been nice knowing you. You will be missed.");
     } else if ((score < 60) && (score >= 30)) {
         $("#results").html(percentMessage + "<br>" + "<br>" +  "May your death be merciful and just.");
     } else if (score < 30) {
         $("#results").html(percentMessage + "<br>" +  "<br>" + "You lucky duck! Watch your step; this result could change at any moment.");
     }
+
 }
 
 
