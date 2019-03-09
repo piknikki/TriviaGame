@@ -56,9 +56,9 @@ function countDown() {
 
 function renderQuestion() {
     // give a question
-    // if no more left, render next one
+    // if more left, render next one
     if (questionIndex <= (questionsAnswers.length - 1)) {
-        var currentQuestion = questionsAnswers[questionIndex].q;
+        currentQuestion = questionsAnswers[questionIndex].q;
     } else {
         finalScore();
     }
@@ -75,11 +75,11 @@ function renderAnswers() {
         finalScore();
     }
 
+
         for (let i = 0; i < currentAnswers.length; i++) {
             answersIndex = currentAnswers.indexOf(currentAnswers[i]);
-            var radioBtn = $('<input id="option" class="my-button" type="radio" name="option">');
             var btnOption = $('<label id="answer" for="option"></label>');
-
+            var radioBtn = $('<input id="option" class="my-button" type="radio" name="option">');
 
             radioBtn.addClass("radioBtn");
             btnOption.text("  " + currentAnswers[answersIndex]);
@@ -94,16 +94,18 @@ function renderAnswers() {
                 radioBtn.attr("data-radiobtnvalue", 2);
             }
 
-            $("#answers").append(radioBtn).append(btnOption);
+            $("#answers").append(btnOption).append(radioBtn);
 
         }
 
 
     $("#answers").on("click", "input", function(event) {
+        started = true;
         event.preventDefault();
         score = score + parseInt($(this).attr("data-radiobtnvalue"));
         $("#your-score").text(score);
         renderQuestion();
+
     });
 }
 
