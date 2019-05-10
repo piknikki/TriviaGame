@@ -12,3 +12,6 @@ Good luck!
 ((please note that the game is based on The Oatmeal's app named "Is your cat plotting to kill you?"))
 
 (((I do not take any credit for the cleverness of the content)))
+
+# Deployed link:
+ http://www.nikkipetersen.dev/TriviaGame/
